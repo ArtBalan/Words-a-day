@@ -10,65 +10,117 @@ async function fetchWords () {
     .then(res => res.json());
 };
 
+let WordObj = class WordObj{
+    
+    constructor(id,word,pos,def){
+        this.id = id;
+        this.word = word;
+        this.pos = pos;
+        this.def = def;
+    }
+
+    returnNode(){
+        
+        let wordRow = document.createElement('tr');
+
+        //ID CELL
+        let idCell = document.createElement('td');
+
+        idCell.innerHTML = this.id;
+        wordRow.appendChild(idCell);
+        
+        //WORD CELL
+        let wordCell = document.createElement('td');
+
+        wordCell.innerText = this.word;
+        wordRow.appendChild(wordCell);
+        
+        // PARTOFSPEECH CELL
+        let posCell = document.createElement('td');
+        let posList = document.createElement('ul');
+
+        this.pos.forEach(element => {
+            let posElement = document.createElement('li');
+            posElement.innerHTML = element;
+            posList.appendChild(posElement);
+        });
+        posCell.appendChild(posList);
+        wordRow.appendChild(posCell);
+
+
+        //DEFININTIONS CELL
+        let defCell = document.createElement('td');
+        let defList = document.createElement('ul');
+
+        this.def.forEach(element => {
+            let defElement = document.createElement('li');
+            defElement.innerHTML = element;
+            defList.appendChild(defElement);
+        });
+        defCell.appendChild(defList);
+        wordRow.appendChild(defCell);
+
+        //BUTTON CELL
+        let btnCell = document.createElement('td');
+        let btn = document.createElement('button');
+        btn.className = "btn btn-primary" ;
+        btn.innerText = 'test';
+        btnCell.appendChild(btn);
+        wordRow.appendChild(btnCell);
+
+        btn.addEventListener("click", () => {
+            this.displayInfo();
+        })
+
+        return wordRow;
+    }
+
+    displayInfo(){
+        console.log(this.word, this.pos, this.def);
+    }
+}
+
+
+
+
 const showWords = async() =>{
-    await fetchWords();
     let i = 0;
 
+    wordList = [];
+
+
     while( i< 10){
-        let wordRow = document.createElement('tr');
-        
-        
+        //retrive word
         let word = await fetchWords();
-
+        //retrive word info
         let wordInfo = await fetchInfo(word);
-
+        //check if word existe
         if(wordInfo.title) console.log('err');
         else{
             i+=1;
             
-            // ID CELL
-            let idCell = document.createElement('td');
-            idCell.innerText = i;
-            wordRow.appendChild(idCell);
+            //create word id
+            let id = i;
 
-            // WORD CELL
-            let wordCell = document.createElement('td');
-            wordCell.innerText = word;
-            wordRow.appendChild(wordCell);
+            //create pos list
+            let posList = [];
+            wordInfo[0].meanings.forEach(element => { posList.push(element.partOfSpeech)})
 
-            // PARTOFSPEECH CELL
-            let meanings = wordInfo[0].meanings;
+            //create definitions list
+            let defList = [];
+            wordInfo[0].meanings.forEach(element => { defList.push(element.definitions[0].definition)})
 
-            let posCell = document.createElement('td');
-            let posList = document.createElement('ul');
+            wordobj = new WordObj(i,word, posList, defList)
 
-            meanings.forEach(element => {
-                let posElement = document.createElement('li');
-                posElement.innerHTML = element.partOfSpeech;
-                posList.appendChild(posElement);
-            });
-            posCell.appendChild(posList);
-            wordRow.appendChild(posCell);
-
-
-            //DEFININTIONS CELL
-            let defCell = document.createElement('td');
-            let defList = document.createElement('ul');
-
-            meanings.forEach(element => {
-                let defElement = document.createElement('li');
-                defElement.innerHTML = element.definitions[0].definition;
-                defList.appendChild(defElement);
-            });
-            defCell.appendChild(defList);
-            wordRow.appendChild(defCell);
-
-
-
-            // ADDING ROW TO TABLE
-            wordsContainer.appendChild(wordRow);
+            wordList.push(wordobj);
         }
     }
+
+    wordList.forEach(element => {
+        wordsContainer.appendChild(element.returnNode())
+    });
+
+
 }
 
 showWords();
