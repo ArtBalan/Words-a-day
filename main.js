@@ -47,7 +47,6 @@ let WordObj = class WordObj{
         posCell.appendChild(posList);
         wordRow.appendChild(posCell);
 
-
         //DEFININTIONS CELL
         let defCell = document.createElement('td');
         let defList = document.createElement('ul');
@@ -80,14 +79,10 @@ let WordObj = class WordObj{
     }
 }
 
-
-
-
 const showWords = async() =>{
     let i = 0;
 
     wordList = [];
-
 
     while( i< 10){
         //retrive word
@@ -120,7 +115,5 @@ const showWords = async() =>{
         wordsContainer.appendChild(element.returnNode())
     });
 
-
 }
-
 showWords();
