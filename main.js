@@ -1,4 +1,5 @@
 const wordsContainer = document.getElementById('words-table');
+const reloadBtn = document.getElementById('relaod-btn');
 
 async function fetchInfo(word){
     return await fetch('https://api.dictionaryapi.dev/api/v2/entries/en/'+word)
@@ -62,8 +63,8 @@ let WordObj = class WordObj{
         //BUTTON CELL
         let btnCell = document.createElement('td');
         let btn = document.createElement('button');
-        btn.className = "btn btn-primary" ;
-        btn.innerText = 'test';
+        btn.className = "btn btn-secondary" ;
+        btn.innerText = 'Add to Notion';
         btnCell.appendChild(btn);
         wordRow.appendChild(btnCell);
 
@@ -84,7 +85,7 @@ const showWords = async() =>{
 
     wordList = [];
 
-    while( i< 10){
+    while( i< 5){
         //retrive word
         let word = await fetchWords();
         //retrive word info
@@ -111,9 +112,19 @@ const showWords = async() =>{
         }
     }
 
+    
+    while(wordsContainer.firstChild){
+        wordsContainer.removeChild(wordsContainer.lastChild);
+    };
+
     wordList.forEach(element => {
         wordsContainer.appendChild(element.returnNode())
     });
 
 }
+
+reloadBtn.addEventListener('click', () => {
+    showWords();
+});
+
 showWords();
