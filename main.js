@@ -81,6 +81,11 @@ let WordObj = class WordObj{
 }
 
 const showWords = async() =>{
+
+    while(wordsContainer.firstChild){
+        wordsContainer.removeChild(wordsContainer.lastChild);
+    };
+
     let i = 0;
 
     wordList = [];
@@ -109,18 +114,10 @@ const showWords = async() =>{
             wordobj = new WordObj(i,word, posList, defList)
 
             wordList.push(wordobj);
+
+            wordsContainer.appendChild(wordobj.returnNode())
         }
     }
-
-    
-    while(wordsContainer.firstChild){
-        wordsContainer.removeChild(wordsContainer.lastChild);
-    };
-
-    wordList.forEach(element => {
-        wordsContainer.appendChild(element.returnNode())
-    });
-
 }
 
 reloadBtn.addEventListener('click', () => {
