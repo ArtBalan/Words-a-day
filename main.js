@@ -60,18 +60,6 @@ let WordObj = class WordObj{
         defCell.appendChild(defList);
         wordRow.appendChild(defCell);
 
-        //BUTTON CELL
-        let btnCell = document.createElement('td');
-        let btn = document.createElement('button');
-        btn.className = "btn btn-secondary" ;
-        btn.innerText = 'Add to Notion';
-        btnCell.appendChild(btn);
-        wordRow.appendChild(btnCell);
-
-        btn.addEventListener("click", () => {
-            this.displayInfo();
-        })
-
         return wordRow;
     }
 
@@ -90,7 +78,7 @@ const showWords = async() =>{
 
     wordList = [];
 
-    while( i< 5){
+    while( i< document.getElementById('wordNbr').value){
         //retrive word
         let word = await fetchWords();
         //retrive word info
@@ -120,7 +108,8 @@ const showWords = async() =>{
     }
 }
 
-reloadBtn.addEventListener('click', () => {
+reloadBtn.addEventListener('click', (event) => {
+		event.preventDefault();
     showWords();
 });
 
